@@ -36,8 +36,9 @@ RUN mkdir /var/tmp/heyu &&\
 ADD --chown=www-data:www-data cgi-bin/* /usr/lib/cgi-bin/
 
 WORKDIR /
-RUN rm -rf /root/heyu/
-USER www-data
+RUN rm -rf /root/heyu/ &&\
+	sed -i '/Listen/{s/\([0-9]\+\)/8080/; :a;n; ba}' /etc/apache2/ports.conf
+	
 EXPOSE 80
 
 CMD ["apache2ctl", "-DFOREGROUND"]
