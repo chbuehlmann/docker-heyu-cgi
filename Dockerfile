@@ -35,10 +35,15 @@ RUN mkdir /var/tmp/heyu &&\
 	
 ADD --chown=www-data:www-data cgi-bin/* /usr/lib/cgi-bin/
 
+ADD  docker-entrypoint.sh /usr/local/bin/
+RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
+
 WORKDIR /
 RUN rm -rf /root/heyu/ &&\
 	sed -i '/Listen/{s/\([0-9]\+\)/8080/; :a;n; ba}' /etc/apache2/ports.conf
 	
-EXPOSE 80
+EXPOSE 8080
+
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["apache2ctl", "-DFOREGROUND"]
